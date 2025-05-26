@@ -1,17 +1,189 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- para que funcione bien en una gran variación de tamaños y orientaciones de pantalla -->
-    <title>MusicSJ</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <!-- Para incluir el CSS de Bootstrap -->
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-    <!-- Para incluir el paquete de JavaScript de Bootstrap --> 
-</body>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+        <title>MusicSJ</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+        <!-- Uso de JavaScript para botones de mostrar/ocultar -->
+        <script>
+            function toggleVisibility(sectionId) {
+                const section = document.getElementById(sectionId);
+                if (section.style.display === "none" || section.style.display === "") {
+                    section.style.display = "block";
+                } else {
+                    section.style.display = "none";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <header class="bg-primary text-white text-center p-4"> <!-- Encabezado de la pagina con fondo azul, texto blanco y centrado -->
+            <h1>MusicSJ</h1>
+            <p>Gestor Musical</p>
+        </header>
+        <main class="container mt-4"><!-- Seccion principal -->
+            <section class="mb-5"> <!-- Registrar Artista -->
+                <h2>Registrar Artista</h2>
+                <form method="POST" action="/insertar_artista"><!-- El método POST introduce los parámetros en la solicitud HTTP-->
+                    <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre del artista" required /><!-- Se utiliza para crear controles interactivos en formularios web que aceptan datos del usuario -->
+                    <select name="pais" class="form-select mb-2"><!-- Proporciona un menú de opciones -->
+                        {% for pais in paises %}
+                        <option value="{{ pais }}">{{ pais }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="id_genero" class="form-select mb-2">
+                        {% for genero in generos %}
+                        <option value="{{ genero.id_genero }}">{{ genero.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="submit" class="btn btn-primary">Agregar Artista</button>
+                        <button type="button" class="btn btn-secondary" onclick="toggleVisibility('artistas-list')">Mostrar/Ocultar Artistas</button>
+                    </div>
+                </form>
+                <div id="artistas-list" style="display: none;" class="mt-3">
+                    <h3>Lista de Artistas</h3>
+                    <ul>
+                        {% for artista in artistas %}
+                        <li>{{ artista.nombre }} ({{ artista.pais }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+            <section class="mb-5"><!-- Registrar Album -->
+                <h2>Registrar Álbum</h2>
+                <form method="POST" action="/insertar_album">
+                    <input type="text" name="titulo" class="form-control mb-2" placeholder="Título del álbum" required />
+                    <select name="id_artista" class="form-select mb-2" required>
+                        {% for artista in artistas %}
+                        <option value="{{ artista.id }}">{{ artista.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="number" name="anio_lanzamiento" class="form-control mb-2" placeholder="Año de lanzamiento" required />
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="submit" class="btn btn-primary">Agregar Álbum</button>
+                        <button type="button" class="btn btn-secondary" onclick="toggleVisibility('albumes-list')">Mostrar/Ocultar Álbumes</button>
+                    </div>
+                </form>
+                <div id="albumes-list" style="display: none;" class="mt-3">
+                    <h3>Lista de Álbumes</h3>
+                    <ul>
+                        {% for album in albumes %}
+                        <li>{{ album.titulo }} (Año: {{ album.anio_lanzamiento }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+            <section class="mb-5"><!-- Registrar Cancion -->
+                <h2>Registrar Canción</h2>
+                <form method="POST" action="/insertar_cancion">
+                    <input type="text" name="titulo" class="form-control mb-2" placeholder="Título de la canción" required />
+                    <select name="id_album" class="form-select mb-2" required>
+                        {% for album in albumes %}
+                        <option value="{{ album.id }}">{{ album.titulo }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="id_genero" class="form-select mb-2">
+                        {% for genero in generos %}
+                        <option value="{{ genero.id_genero }}">{{ genero.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="duracion" class="form-control mb-2" placeholder="Duración (ej. 3:45)" required />
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="submit" class="btn btn-primary">Agregar Canción</button>
+                        <button type="button" class="btn btn-secondary" onclick="toggleVisibility('canciones-list')">Mostrar/Ocultar Canciones</button>
+                    </div>
+                </form>
+                <div id="canciones-list" style="display: none;" class="mt-3">
+                    <h3>Lista de Canciones</h3>
+                    <ul>
+                        {% for cancion in canciones %}
+                        <li>{{ cancion.titulo }} (Duración: {{ cancion.duracion }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+            <section class="mb-5"><!-- Crear Playlist -->
+                <h2>Crear Playlist</h2>
+                <form method="POST" action="/insertar_playlist">
+                    <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre de la playlist" required />
+                    <input type="date" name="fecha_creacion" class="form-control mb-2" required />
+                    <select name="id_usuario" class="form-select mb-2" required>
+                        {% for usuario in usuarios %}
+                        <option value="{{ usuario.id }}">{{ usuario.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="submit" class="btn btn-primary">Crear Playlist</button>
+                    <button class="btn btn-secondary" onclick="toggleVisibility('playlists-list')">Mostrar/Ocultar Playlists</button>
+                    </div>  
+                </form>
+                <div id="playlists-list" style="display: none;" class="mt-3">
+                    <h3>Lista de Playlists</h3>
+                    <ul>
+                        {% for playlist in playlists %}
+                        <li>{{ playlist.nombre }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+            <section><!-- Agregar canción a playlist -->
+                <h2>Agregar Canción a Playlist</h2>
+                <form method="POST" action="/agregar_a_playlist" class="mb-5">
+                    <select name="id_playlist" class="form-select mb-2" required>
+                        {% for playlist in playlists %}
+                        <option value="{{ playlist.id }}">{{ playlist.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="id_cancion" class="form-select mb-2" required>
+                        {% for cancion in canciones %}
+                        <option value="{{ cancion.id }}">{{ cancion.titulo }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="date" name="fecha_agregado" class="form-control mb-2" required />
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </form>
+            </section>
+            <section><!-- Valoración -->
+                <h2>Registrar Valoración</h2>
+                <form method="POST" action="/insertar_valoracion" class="mb-4">
+                    <select name="id_usuario" class="form-select mb-2" required>
+                        {% for usuario in usuarios %}
+                        <option value="{{ usuario.id }}">{{ usuario.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="id_cancion" class="form-select mb-2" required>
+                        {% for cancion in canciones %}
+                        <option value="{{ cancion.id }}">{{ cancion.titulo }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="puntuacion" class="form-select mb-2" required>
+                        {% for i in range(1, 6) %}
+                        <option value="{{ i }}">{{ i }} estrellas</option>
+                        {% endfor %}
+                    </select>
+                    <textarea name="comentario" class="form-control mb-2" placeholder="Comentario"></textarea>
+                    <button type="submit" class="btn btn-warning">Enviar Valoración</button>
+                </form>
+            </section>
+            <section><!-- Reproducción -->
+                <h2>Registrar Reproducción</h2>
+                <form method="POST" action="/insertar_reproduccion" class="mb-5">
+                    <select name="id_usuario" class="form-select mb-2" required>
+                        {% for usuario in usuarios %}
+                        <option value="{{ usuario.id }}">{{ usuario.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="id_cancion" class="form-select mb-2" required>
+                        {% for cancion in canciones %}
+                        <option value="{{ cancion.id }}">{{ cancion.titulo }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="datetime-local" name="fecha_hora" class="form-control mb-2" required />
+                    <button type="submit" class="btn btn-success">Registrar Reproducción</button>
+                </form>
+            </section>
+        </main>
+    </body>
 </html>
-
