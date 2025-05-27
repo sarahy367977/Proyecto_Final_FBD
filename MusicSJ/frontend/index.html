@@ -8,11 +8,11 @@
         <!-- Uso de JavaScript para botones de mostrar/ocultar -->
         <script>
             function toggleVisibility(sectionId) {
-                const section = document.getElementById(sectionId);
-                if (section.style.display === "none" || section.style.display === "") {
-                    section.style.display = "block";
+                const section = document.getElementById(sectionId); 
+                if (section.style.display === "none" || section.style.display === "") { // Se usa igualdad estricta, comprueba si el contenido esta oculto
+                    section.style.display = "block"; // La condicion se cumple muetra el contenido oculto
                 } else {
-                    section.style.display = "none";
+                    section.style.display = "none"; // La condicion no se cumple oculta el contenido
                 }
             }
         </script>
@@ -25,10 +25,10 @@
         <main class="container mt-4"><!-- Seccion principal -->
             <section class="mb-5"> <!-- Registrar Artista -->
                 <h2>Registrar Artista</h2>
-                <form method="POST" action="/insertar_artista"><!-- El método POST introduce los parámetros en la solicitud HTTP-->
+                <form method="POST" action="/insertar_artista"><!-- El método POST envia los datos del formulario -->
                     <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre del artista" required /><!-- Se utiliza para crear controles interactivos en formularios web que aceptan datos del usuario -->
                     <select name="pais" class="form-select mb-2"><!-- Proporciona un menú de opciones -->
-                        {% for pais in paises %}
+                        {% for pais in paises %} <!-- Para mostrar los paises -->
                         <option value="{{ pais }}">{{ pais }}</option>
                         {% endfor %}
                     </select>
@@ -38,7 +38,7 @@
                         {% endfor %}
                     </select>
                     <div class="d-flex justify-content-between align-items-center">
-                        <button type="submit" class="btn btn-primary">Agregar Artista</button>
+                        <button type="submit" class="btn btn-primary">Agregar Artista</button> <!-- Control para enviar formularios -->
                         <button type="button" class="btn btn-secondary" onclick="toggleVisibility('artistas-list')">Mostrar/Ocultar Artistas</button>
                     </div>
                 </form>
@@ -46,7 +46,12 @@
                     <h3>Lista de Artistas</h3>
                     <ul>
                         {% for artista in artistas %}
-                        <li>{{ artista.nombre }} ({{ artista.pais }})</li>
+                        <li>
+                            {{ artista.nombre }} ({{ artista.pais }})
+                            <form action="/borrar_artista/{{ artista.id }}" method="POST" style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Deseas eliminar este artista?')">Eliminar</button>
+                            </form>
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -70,7 +75,12 @@
                     <h3>Lista de Álbumes</h3>
                     <ul>
                         {% for album in albumes %}
-                        <li>{{ album.titulo }} (Año: {{ album.anio_lanzamiento }})</li>
+                        <li>
+                            {{ album.titulo }} (Año: {{ album.anio_lanzamiento }})
+                            <form action="/borrar_album/{{ album.id }}" method="POST" style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Deseas eliminar este álbum?')">Eliminar</button>
+                            </form>
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -99,7 +109,12 @@
                     <h3>Lista de Canciones</h3>
                     <ul>
                         {% for cancion in canciones %}
-                        <li>{{ cancion.titulo }} (Duración: {{ cancion.duracion }})</li>
+                        <li>
+                            {{ cancion.titulo }} (Duración: {{ cancion.duracion }})
+                            <form action="/borrar_cancion/{{ cancion.id }}" method="POST" style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Deseas eliminar esta canción?')">Eliminar</button>
+                            </form>
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -123,7 +138,12 @@
                     <h3>Lista de Playlists</h3>
                     <ul>
                         {% for playlist in playlists %}
-                        <li>{{ playlist.nombre }}</li>
+                        <li>
+                            {{ playlist.nombre }}
+                            <form action="/borrar_playlist/{{ playlist.id }}" method="POST" style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Deseas eliminar esta playlist?')">Eliminar</button>
+                            </form>
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
