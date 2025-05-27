@@ -4,7 +4,15 @@ import datetime
 def conexion(user, password, dsn):
     return oracledb.connect(user=user, password=password, dsn=dsn)
 
-pip install flask
+def obtener_conexion():
+    try:
+        conn = oracledb.connect(user="proyecto", password="sj", dsn="localhost/xepdb1")
+        return conn
+    except Exception as e:
+        print(f"Error al conectar a la base de datos: {e}")
+        return None
+
+
 def query_one(cursor, query):
     cursor.execute(query)
     row =  cursor.fetchone()
@@ -257,3 +265,17 @@ def delete_valoracion(cursor, id_valoracion):
     cursor.execute("delete from valoracion where id_valoracion = :1", [id_valoracion])
     if cursor.rowcount > 0:
         cursor.connection.commit()
+
+def ejecutar_query(funcion_query, *args):
+    conn = obtener_conexion()
+    if not conn:
+        return None
+    try:
+        with conn.cursor() as cursor:
+            resultado = funcion_query(cursor, *args)
+            return resultado
+    except Exception as e:
+        print(f"Error ejecutando query: {e}")
+        return None
+    finally:
+        conn.close()
