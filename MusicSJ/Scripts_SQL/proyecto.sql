@@ -82,4 +82,12 @@ ALTER TABLE playlist  MODIFY nombre VARCHAR2(100);
 ALTER TABLE Album MODIFY (anio_lanzamiento DATE)
 ALTER TABLE album DROP COLUMN anio_lanzamiento;
 ALTER TABLE album ADD anio_lanzamiento NUMBER(4);
-ALTER TABLE Cancion MODIFY titulo VARCHAR2(50);;
+ALTER TABLE Cancion MODIFY titulo VARCHAR2(50);
+ALTER TABLE Usuario ADD CONSTRAINT ck_contrasena CHECK (LENGTH(contrasena) >= 8);
+
+
+
+SELECT constraint_name, search_condition 
+FROM user_constraints 
+WHERE table_name = 'USUARIO' AND constraint_type = 'C';
+ALTER TABLE Usuario DROP CONSTRAINT ck_contrasena;

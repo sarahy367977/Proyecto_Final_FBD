@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Canciones de {{ album.title }}</title></head>
+<body>
+<h1>Canciones de {{ album.title }} - {{ artist.name }}</h1>
+<ul>
+    {% for song in songs %}
+    <li>
+        {{ song.title }}
+        <form method="post" action="{{ url_for('add_to_playlist') }}" style="display:inline;">
+            <input type="hidden" name="song_id" value="{{ song.id }}">
+            Playlist: <input type="text" name="playlist_name" placeholder="Nombre playlist" required>
+            <button type="submit">Agregar a playlist</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('artist_albums', artist_id=artist.id) }}">Volver a álbumes</a><br>
+<a href="{{ url_for('index') }}">Volver a artistas</a>
+</body>
+</html>

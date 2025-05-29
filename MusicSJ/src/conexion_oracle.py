@@ -74,6 +74,10 @@ def insert_artista(cursor, nombre, pais, genero_principal):
 def read_artista(cursor, id_artista):
     cursor.execute("select nombre, pais, genero_principal from artista where id_artista = :1", [id_artista ])
     return cursor.fetchone()
+
+def read_all_artistas(cursor):
+    cursor.execute("SELECT id_artista, nombre FROM artista")
+    return cursor.fetchall()
     
 def delete_artista(cursor, id_artista):
     cursor.execute("delete from artista where id_artista = :1", [id_artista])

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Álbumes de {{ artist.name }}</title></head>
+<body>
+<h1>Álbumes de {{ artist.name }}</h1>
+<ul>
+    {% for album in albums %}
+    <li><a href="{{ url_for('album_songs', album_id=album.id) }}">{{ album.title }}</a></li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('index') }}">Volver a artistas</a>
+</body>
+</html>

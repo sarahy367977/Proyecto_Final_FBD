@@ -694,4 +694,4 @@ values  (5, 'Clásico de los Beatles que nunca envejece',
         (select id_cancion from cancion where titulo = 'Come Together'), 
         (select id_usuario from usuario where nombre = 'Lucía Wong'));
         
-        
+   commit;     
